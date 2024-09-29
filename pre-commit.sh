@@ -14,7 +14,7 @@ echo "Formatting $file with yapf"
 python -m yapf -i "$file"
 
 # Type check qtsit package
-echo "Type checking deepchem package with mypy"
+echo "Type checking qtsit package with mypy"
 python -m mypy -p qtsit
 
 # Lint file with flake8 and show count
