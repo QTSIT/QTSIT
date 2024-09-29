@@ -1,15 +1,11 @@
 """
 Code for random walk algorithms.
 """
-
-import random
-import qiskit
 import numpy as np
 
 
-# abstract class walk - will be used in classical walk and quantum walk
-class walk:
-    """Abstract class for random walk algorithms.
+class classical_walk:
+    """Classical random walk algorithm.
     """
 
     def __init__(self,
@@ -18,8 +14,8 @@ class walk:
                  steps,
                  j,
                  k,
-                 groundtruth,
-                 toss_val=0.1) -> None:
+                 ground_truth,
+                 toss_val: float = 0.1) -> None:
         self.size = size
         self.j = j
         self.k = k
@@ -30,20 +26,24 @@ class walk:
         for _ in range(size):
             self.walking_space.append([0.5, 0, 0.5])
 
-        self.pos = []
+        self.pos: list[float] = []
         self.pos_index = initial_pos
-        self.ground_truth = groundtruth
+        self.ground_truth = ground_truth
         self.emp_truth = []
-        for i in range(size):
+        for _ in range(size):
             self.emp_truth.append(0.0)
         self.happiness = [0 for i in range(self.size)]
         self.hits = [0 for i in range(self.size)]
         self.cumsum = 0
 
-    def goto_pos(self):
+    def goto_pos(self) -> None:
+        """Go to the position.
+        """
         self.pos = self.walking_space[self.pos_index]
 
-    def coin_toss(self):
+    def coin_toss(self) -> None:
+        """Coin toss function.
+        """
         self.toss_val = np.random.rand()
 
         if (0 <= self.toss_val <= self.pos[0]):
@@ -53,7 +53,9 @@ class walk:
         if (self.pos[0] + self.pos[1] < self.toss_val <= 1):
             self.result = "FORWARD"
 
-    def one_walk(self):
+    def one_walk(self) -> None:
+        """One walk function.
+        """
         if (self.pos_index == self.size - 1):
             if (self.result == "BACK"):
                 self.pos_index = self.pos_index - 1
@@ -104,16 +106,15 @@ class walk:
                 self.walking_space[j][2] = self.walking_space[j][0]
             self.pos_index = np.array(self.emp_truth).argmax()
 
+    def main(self):
+        """Main function.
+        """
+        self.explore()
 
-class classical_walk(walk):
-    """Classical random walk algorithm.
-    """
-
-    def __init__(self, graph):
-        super().__init__(graph)
+        return sum(self.happiness)
 
 
-class quantum_walk(walk):
+class quantum_walk():
     """Quantum random walk algorithm.
     """
 
